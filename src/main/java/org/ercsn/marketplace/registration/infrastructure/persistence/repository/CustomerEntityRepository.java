@@ -2,12 +2,20 @@ package org.ercsn.marketplace.registration.infrastructure.persistence.repository
 
 
 import org.ercsn.marketplace.registration.infrastructure.persistence.entity.Customer;
+import org.ercsn.marketplace.registration.infrastructure.persistence.entity.projection.CustomerExcerpt;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.List;
 import java.util.UUID;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = CustomerExcerpt.class)
 public interface CustomerEntityRepository extends PagingAndSortingRepository<Customer, UUID>, CrudRepository<Customer, UUID> {
+    List<Customer> findByFirstNameStartingWithIgnoreCase(@Param("fistName") String firstName);
+    @Override
+    @RestResource(exported = false)
+    void deleteById(UUID id);
 }
