@@ -37,7 +37,7 @@ public class JpaCustomerRepository implements CustomerRepository {
         var entity = new org.ercsn.marketplace.registration.infrastructure.persistence.entity.Customer();
 
         entity.setId(customer.getId().id());
-        entity.setFistName(customer.getName());
+        entity.setFirstName(customer.getName());
         entity.setEmail(customer.getEmail());
 
         return entity;
@@ -45,8 +45,8 @@ public class JpaCustomerRepository implements CustomerRepository {
 
     private static Customer mapper(org.ercsn.marketplace.registration.infrastructure.persistence.entity.Customer entity) {
         String fullName = Optional.ofNullable(entity.getLastName())
-                .map(lastName -> entity.getFistName() + " " + lastName )
-                .orElseGet(entity::getFistName);
+                .map(lastName -> entity.getFirstName() + " " + lastName )
+                .orElseGet(entity::getFirstName);
 
         return new Customer(new CustomerId(entity.getId()), fullName, entity.getEmail());
     }
