@@ -6,6 +6,7 @@ import org.ercsn.marketplace.catalog.domain.EventMetadataRepository;
 import org.ercsn.marketplace.catalog.domain.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class BrowseShowcaseUseCase {
         this.eventEnricher = eventEnricher;
     }
 
+    @Cacheable(value = "showcase", unless = "#result.isEmpty()")
     public List<EventOutput> execute() {
         var futures = eventRepository.findAll().stream().map(eventEnricher::enrich).toList();
 

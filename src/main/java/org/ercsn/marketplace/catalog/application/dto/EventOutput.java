@@ -3,6 +3,7 @@ package org.ercsn.marketplace.catalog.application.dto;
 import org.ercsn.marketplace.catalog.domain.Event;
 import org.ercsn.marketplace.catalog.domain.EventMetadata;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -19,12 +20,12 @@ public record EventOutput(
             String eventDescription,
             Map<String, Object> technicalRequirements,
             Map<String, List<SeatOutput>> seatsBySector
-    ) {
+    ) implements Serializable {
         public record SeatOutput(
                 String id,
                 String sectorId,
                 BigDecimal price
-        ) {
+        ) implements Serializable {
         }
         public static EventMetadataOutput from(EventMetadata metadata) {
             Map<String, List<SeatOutput>> seats =
