@@ -1,6 +1,6 @@
 package org.ercsn.marketplace.registration.infrastructure.persistence.repository;
 
-import org.ercsn.marketplace.catalog.common.infrastructure.event.dto.CustomerCreated;
+import org.ercsn.marketplace.common.infrastructure.event.dto.CustomerCreated;
 import org.ercsn.marketplace.registration.domain.Customer;
 import org.ercsn.marketplace.registration.domain.CustomerId;
 import org.ercsn.marketplace.registration.domain.CustomerRepository;

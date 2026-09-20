@@ -1,7 +1,7 @@
 package org.ercsn.marketplace.registration.infrastructure.event;
 
-import org.ercsn.marketplace.catalog.common.infrastructure.event.dto.CustomerCreated;
-import org.ercsn.marketplace.registration.domain.Customer;
+import org.ercsn.marketplace.common.infrastructure.event.dto.CustomerCreated;
+import org.ercsn.marketplace.registration.infrastructure.persistence.entity.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,9 +23,9 @@ public class CustomerEventHandler {
     }
 
     @HandleAfterCreate
-        public void handleAfterCreate(Customer customer){
+    public void handleAfterCreate(Customer customer){
         log.warn("CustomerEventHandler#handleAfterCreate");
-        publisher.publishEvent(new CustomerCreated(customer.getId().toString(), customer.getName()));
+        publisher.publishEvent(new CustomerCreated(customer.getId().toString(), customer.getFirstName()));
     }
 
     @HandleAfterSave

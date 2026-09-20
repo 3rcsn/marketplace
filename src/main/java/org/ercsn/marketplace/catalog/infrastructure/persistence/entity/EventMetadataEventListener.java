@@ -1,6 +1,6 @@
 package org.ercsn.marketplace.catalog.infrastructure.persistence.entity;
 
-import org.ercsn.marketplace.catalog.common.infrastructure.event.dto.EventUpdated;
+import org.ercsn.marketplace.common.infrastructure.event.dto.EventUpdated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
