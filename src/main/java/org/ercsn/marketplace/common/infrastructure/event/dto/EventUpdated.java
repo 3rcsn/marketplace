@@ -1,4 +1,4 @@
-package org.ercsn.marketplace.catalog.common.infrastructure.event.dto;
+package org.ercsn.marketplace.common.infrastructure.event.dto;
 
 import org.ercsn.marketplace.catalog.infrastructure.persistence.entity.EventMetadata;
 
