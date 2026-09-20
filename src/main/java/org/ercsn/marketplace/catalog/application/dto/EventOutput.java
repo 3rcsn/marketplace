@@ -15,7 +15,7 @@ public record EventOutput(
         String title,
         Instant date,
         EventMetadataOutput metadata
-) {
+) implements Serializable {
     public record EventMetadataOutput(
             String eventDescription,
             Map<String, Object> technicalRequirements,
