@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PostgresCustomerRepository implements CustomerRepository {
+
     private final CustomerCrudRepository customerCrudRepository;
 
     public PostgresCustomerRepository(CustomerCrudRepository customerCrudRepository) {
@@ -14,6 +15,12 @@ public class PostgresCustomerRepository implements CustomerRepository {
 
     @Override
     public void save(Customer customer) {
-        var entity = new Customer()
+        var entity = new org.ercsn.marketplace.ticketing.infrastructure.persistence.entity.Customer(
+                customer.getId(),
+                customer.getCorrelationId().id(),
+                customer.getName()
+        );
+        customerCrudRepository.save(entity);
     }
+
 }

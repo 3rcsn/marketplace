@@ -47,16 +47,16 @@ public class TicketingConfiguration {
     @Qualifier("ticketing")
     @Bean(defaultCandidate = false)
     public LocalContainerEntityManagerFactoryBean ticketingEntityManagerFactory(@Qualifier("ticketing") DataSource dataSource,
-                                                                                   @Qualifier("ticketing") JpaProperties  properties, JpaProperties jpaProperties) {
+                                                                                   @Qualifier("ticketing") JpaProperties  properties) {
         var builder = new EntityManagerFactoryBuilder(
                 new HibernateJpaVendorAdapter(),
-                x -> new LinkedHashMap<>(jpaProperties.getProperties()),
+                x -> new LinkedHashMap<>(properties.getProperties()),
                 null
         );
 
         return builder
                 .dataSource(dataSource)
-                .properties(jpaProperties.getProperties())
+                .properties(properties.getProperties())
                 .packages("org.ercsn.marketplace.ticketing")
                 .persistenceUnit("ticketing")
                 .build();
