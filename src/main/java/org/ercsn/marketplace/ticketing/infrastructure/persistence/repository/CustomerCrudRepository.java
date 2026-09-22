@@ -6,6 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.UUID;
 
-@RepositoryRestResource(exported = false)
+@RepositoryRestResource(exported = false, path = "_customers")
 public interface CustomerCrudRepository extends CrudRepository<Customer, UUID> {
 }
