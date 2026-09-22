@@ -1,24 +1,22 @@
 # Marketplace
 
-Marketplace is a Java/Spring-based modular monolith application for managing event catalog data, event metadata, customer registration, and ticketing.
-
-The project demonstrates how to organize a backend application into business-oriented modules while integrating multiple persistence technologies and modern Java features.
+Marketplace is a Java/Spring-based modular monolith application designed to manage event catalogs, event metadata, customer registrations, and ticketing operations. It serves as a comprehensive demonstration of organizing a backend application into business-oriented modules while integrating multiple persistence technologies and modern Java features.
 
 ## Features
 
-- **Catalog Management**: Handles event listings, sectors, and seats with MySQL.
-- **Event Metadata**: Stores rich event information in MongoDB.
-- **Customer Registration**: Manages customer profiles using a dedicated MySQL database.
-- **Ticketing**: Handles event and customer data for ticketing operations using PostgreSQL.
-- **Multi-Database Support**: Integrates MySQL, PostgreSQL, and MongoDB within a single application.
-- **Asynchronous Enrichment**: Enriches event data with metadata asynchronously.
-- **Redis Caching**: Optimized performance for the showcase using Redis.
-- **Virtual Threads**: High-concurrency support using Java's virtual threads.
-- **RESTful APIs**: Exposes endpoints for browsing the showcase and managing customers via Spring Data REST.
+- **Catalog Management**: Efficiently handles event listings, sectors, and seats using MySQL for core data.
+- **Rich Event Metadata**: Utilizes MongoDB to store flexible and detailed event information.
+- **Customer Registration**: Manages user profiles and addresses through a dedicated MySQL instance.
+- **Ticketing System**: Handles high-concurrency seat selection and reservations using PostgreSQL and Redis for distributed locking.
+- **Multi-Database Integration**: Demonstrates simultaneous integration of MySQL (multiple instances), PostgreSQL, and MongoDB.
+- **Distributed Caching & Locking**: Leverages Redis for optimizing read-heavy endpoints and managing concurrent resource access.
+- **Asynchronous Processing**: Implements asynchronous enrichment of event data.
+- **Virtual Threads**: Optimized for high-concurrency performance using Java's virtual threads.
+- **RESTful Ecosystem**: Provides clean APIs for the showcase and automated management via Spring Data REST.
 
 ## Technologies Used
 
-- **Java 25** (with Virtual Threads enabled)
+- **Java 25** (Virtual Threads enabled)
 - **Spring Boot 4.1.1**
 - **Spring Data JPA** (MySQL & PostgreSQL)
 - **Spring Data MongoDB**
@@ -27,25 +25,35 @@ The project demonstrates how to organize a backend application into business-ori
 - **Spring Boot Docker Compose**
 - **Lombok**
 - **Gradle**
-- **Databases**: MySQL 9.6, PostgreSQL 18.3, MongoDB 8.2
-- **Cache**: Redis 8.6
+- **Infrastructure**:
+    - **MySQL 9.6**: Two separate instances for Catalog and Registration.
+    - **PostgreSQL 18.3**: Used for Ticketing transactions.
+    - **MongoDB 8.2**: Stores event metadata.
+    - **Redis 8.6**: Two instances (Catalog caching and Ticketing locking).
 
 ## Architecture
 
-The project follows a modular monolith pattern with three main modules:
+The application follows a **Modular Monolith** pattern, ensuring clear separation of concerns between business domains:
 
-- **Catalog Module**: 
-    - **Domain**: Events, Sectors, Seats, EventMetadata.
-    - **Persistence**: MySQL for core event data, MongoDB for rich metadata.
-    - **Performance**: Redis caching for the `/showcase` endpoint.
-    - **API**: `/showcase` for browsing enriched events.
-- **Registration Module**:
-    - **Domain**: Customers, Addresses.
-    - **Persistence**: MySQL.
-    - **API**: Automated REST API via Spring Data REST at `/customers`.
-- **Ticketing Module**:
-    - **Domain**: Events, Customers, Sectors, Seats.
-    - **Persistence**: PostgreSQL.
+### 1. Catalog Module
+- **Responsibility**: Event discovery and showcase.
+- **Domain**: Events, Sectors, Seats, EventMetadata.
+- **Persistence**: MySQL (core data) + MongoDB (metadata).
+- **Optimization**: Redis caching for the showcase API.
+- **API**: `/showcase` for enriched event listings.
+
+### 2. Registration Module
+- **Responsibility**: Customer onboarding and profile management.
+- **Domain**: Customers, Addresses.
+- **Persistence**: MySQL.
+- **API**: `/customers` (Automated via Spring Data REST).
+
+### 3. Ticketing Module
+- **Responsibility**: Seat selection and reservation logic.
+- **Domain**: Events, Customers, Sectors, Seats.
+- **Persistence**: PostgreSQL.
+- **Locking**: Redis-based distributed locks for seat selection.
+- **API**: `/ticketing/events/{eventId}/seats/select`.
 
 ## Prerequisites
 
@@ -54,32 +62,40 @@ The project follows a modular monolith pattern with three main modules:
 
 ## Getting Started
 
-1. **Clone the repository**
-2. **Start the environment**
-   The project uses `spring-boot-docker-compose` to manage database and cache containers automatically when the application starts. 
-   
-   To start them manually:
-   ```bash
-   docker-compose up -d
-   ```
-3. **Run the application**
-   ```bash
-   ./gradlew bootRun
-   ```
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/marketplace.git
+cd marketplace
+```
 
+### 2. Start the Environment
+The project uses `spring-boot-docker-compose`. Database and cache containers will start automatically when you run the application.
+
+If you prefer to start them manually:
+```bash
+docker-compose up -d
+```
+
+### 3. Run the Application
+```bash
+./gradlew bootRun
+```
 The application will be available at `http://localhost:8080`.
 
-## API Endpoints
+## API Reference
 
-- **Browse Showcase**: `GET /showcase` - Returns a list of enriched events (Cached via Redis).
-- **Customer Management**: `GET /customers` - Spring Data REST endpoint for registration profiles.
-- **Actuator Health**: `GET /actuator/health` - Check application health and data source status.
-- **HAL Explorer**: `GET /browser/index.html` - Interactive browser for the REST API.
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/showcase` | `GET` | Browse enriched events (Cached). |
+| `/customers` | `GET` | Customer registration profiles (HAL/JSON). |
+| `/ticketing/events/{id}/seats/select` | `POST` | Select a seat for a customer. |
+| `/actuator/health` | `GET` | Monitor application health. |
+| `/browser/index.html` | `GET` | Interactive HAL Explorer. |
 
 ## Project Structure
 
-- `src/main/java/org/ercsn/marketplace/catalog`: Catalog module logic (MySQL + MongoDB + Redis).
-- `src/main/java/org/ercsn/marketplace/registration`: Registration module logic (MySQL).
-- `src/main/java/org/ercsn/marketplace/ticketing`: Ticketing module logic (PostgreSQL).
-- `src/main/resources/application.properties`: Configuration for multiple data sources, MongoDB, Redis, and Virtual Threads.
-- `compose.yml`: Docker Compose configuration for MySQL, PostgreSQL, MongoDB, and Redis.
+- `src/main/java/org/ercsn/marketplace/catalog`: Event catalog logic (MySQL, Mongo, Redis).
+- `src/main/java/org/ercsn/marketplace/registration`: Customer registration logic (MySQL).
+- `src/main/java/org/ercsn/marketplace/ticketing`: Ticketing and reservation logic (PostgreSQL, Redis).
+- `src/main/resources/application.properties`: Centralized configuration for multiple data sources and virtual threads.
+- `compose.yml`: Infrastructure orchestration (6 containers).
